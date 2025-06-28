@@ -1,5 +1,5 @@
 import TaskCard from "@/module/tasks/TaskCard";
-import { AddTaskModal } from "@/redux/features/task/AddTaskModal";
+import { AddTaskModal } from "@/module/tasks/AddTaskModal";
 import { selectTasks } from "@/redux/features/task/taskSlice";
 import { useAppSelector } from "@/redux/hook";
 
@@ -9,7 +9,7 @@ const Tasks = () => {
     console.log("tasks:", tasks)
 
     return (
-        <div className="mx-auto max-w-7xl px-5 mt-20 mb-20">
+        <div className="mx-auto max-w-7xl px-5 mt-8 mb-20">
             <div className="flex justify-between items-center">
                 <h1>Tasks</h1>
                 <AddTaskModal></AddTaskModal>
