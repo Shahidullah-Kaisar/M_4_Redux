@@ -15,14 +15,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import { addTask } from "@/redux/features/task/taskSlice"
-import { useAppDispatch } from "@/redux/hook"
+import { selectusers } from "@/redux/features/user/userSlice"
+import { useAppDispatch, useAppSelector } from "@/redux/hook"
 import type { ITask } from "@/types"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
+import { useState } from "react"
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form"
 
 export function AddTaskModal() {
+
+  const [open, setOpen] = useState(false)
 
     const form = useForm<ITask>()
     const dispatch = useAppDispatch()
@@ -30,10 +34,16 @@ export function AddTaskModal() {
     const handleForm: SubmitHandler<FieldValues> = (data) =>{
         console.log("submitted data", data)
         dispatch(addTask(data as ITask));
+
+        setOpen(false)
+        form.reset()
     }
 
+    const users = useAppSelector(selectusers)
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>  {/* DialogTrigger এ click করলেই onOpenChange(true) চলে যায় */}
+    
         <DialogTrigger asChild>
           <Button>Add Task</Button>
         </DialogTrigger>
@@ -132,6 +142,30 @@ export function AddTaskModal() {
                           />
                         </PopoverContent>
                       </Popover>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="assignedTo"
+                  render={({ field }) => (
+                    <FormItem className="mt-4">
+                      <FormLabel>Assigned a User</FormLabel>
+                      <Select onValueChange={field.onChange}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a User" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {
+                            users.map((user) => (
+                              <SelectItem value={user.id}>{user.name}</SelectItem>
+                            ))
+                          }
+                        </SelectContent>
+                      </Select>
                     </FormItem>
                   )}
                 />

@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import { deleteTask, toggleCompleteState } from "@/redux/features/task/taskSlice";
-import { useAppDispatch } from "@/redux/hook";
+import { selectusers } from "@/redux/features/user/userSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import type { ITask } from "@/types";
 import { Trash2 } from "lucide-react";
 
@@ -13,6 +14,10 @@ interface Iprops {
 export default function TaskCard({ task }: Iprops) {
 
   const dispatch = useAppDispatch();
+
+  const  users = useAppSelector(selectusers)
+
+  const assignedUser = users.find((user) => user.id === task.assignedTo)
 
   return (
     <div className="border px-5 py-3 rounded-md ">
@@ -37,6 +42,7 @@ export default function TaskCard({ task }: Iprops) {
         
       </div>
       <p className="mt-5">{task.description}</p>
+      <p>Assigned User - {assignedUser ? assignedUser.name : "No User Selected"}</p>
     </div>
   );
 }
